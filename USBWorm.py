@@ -1,5 +1,4 @@
-import os, time, serial
-from serial import SerialException
+import os, time, glob
 from datetime import datetime
 startTime = time.time()
 print """''''''''''''''''''''''''''''''
@@ -26,9 +25,16 @@ def USBDetect():
 				if l[0] == '/':
 					l = l.split()
 					d[l[0]] = l[1]
-			import pprint
-			pprint.pprint(d)
-		except SerialException:
+			print d
+			usb = glob.glob('/dev/sdb*')
+			for lines in d:
+				for lines2 in usb:
+					if lines == lines2:
+						print lines2
+						print True
+					else:
+						print False
+		except IOError:
 			Error = True
 			print "Permission Error"
 			if Error == True:
